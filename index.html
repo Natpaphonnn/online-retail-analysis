@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>วิเคราะห์ยอดขายร้านค้าออนไลน์ | Data Analyst Portfolio</title>
+<meta name="description" content="โปรเจกต์วิเคราะห์ยอดขายร้านค้าออนไลน์: ขายดีวันไหน สินค้าอะไร ยกเลิกเพราะอะไร ลูกค้าคือใคร">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#1F3A5F;--gold:#E9C46A;--cream:#FBF6E9;--card:#FFFDF7;--ink:#22304a;--mute:#6a7488;--line:#e7dfc8;--red:#C8745B}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Mitr',system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--cream);color:var(--ink);line-height:1.7;font-weight:300;-webkit-text-size-adjust:100%}
+b,strong{font-weight:500}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+header.hero{background:var(--navy);color:#fff;padding:56px 0 48px;border-bottom:6px solid var(--gold)}
+.eyebrow{color:var(--gold);letter-spacing:.08em;font-size:.85rem;font-weight:400}
+.hero h1{font-size:clamp(1.7rem,5vw,2.8rem);font-weight:500;line-height:1.3;margin:8px 0 12px}
+.hero p{max-width:640px;color:#d6deea}
+.btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}
+.btn{display:inline-block;padding:9px 20px;border-radius:999px;border:1.5px solid var(--gold);color:var(--gold);text-decoration:none;font-weight:400;font-size:.95rem;transition:.15s}
+.btn:first-child{background:var(--gold);color:var(--navy)}
+.btn:hover{background:var(--gold);color:var(--navy)}
+section{padding:52px 0 8px}
+.sec-no{display:inline-block;background:var(--navy);color:var(--gold);width:34px;height:34px;line-height:34px;text-align:center;border-radius:50%;font-size:.95rem;margin-right:10px;font-weight:500}
+h2{font-size:1.5rem;font-weight:500;color:var(--navy);margin-bottom:6px}
+.lead{color:var(--mute);margin-bottom:22px;font-size:.95rem}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr))}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px}
+.card h3{font-size:1.05rem;font-weight:500;color:var(--navy);margin-bottom:4px}
+.q{border-left:5px solid var(--gold)}
+.q .qn{color:var(--mute);font-size:.8rem}
+.q .ans{margin-top:6px}
+.q .ans em{font-style:normal;background:linear-gradient(transparent 62%,rgba(233,196,106,.55) 62%)}
+.kpi{background:var(--navy);color:#fff;border-radius:16px;padding:20px}
+.kpi .n{font-size:1.9rem;font-weight:500;color:var(--gold);line-height:1.2}
+.kpi .l{font-size:.9rem;color:#d6deea}
+.kpi .s{font-size:.75rem;color:#9fb0c8;margin-top:4px;line-height:1.5}
+.note{font-size:.8rem;color:var(--mute);margin-top:12px;line-height:1.6}
+/* vertical cols */
+.cols{display:flex;align-items:flex-end;gap:8px;height:210px;margin-top:14px;padding-top:6px}
+.col{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%;min-width:0}
+.colbar{width:100%;background:#9FB3C8;border-radius:8px 8px 0 0;min-height:3px}
+.colbar.hi{background:var(--gold)}
+.colbar.none{background:repeating-linear-gradient(45deg,#e7dfc8,#e7dfc8 4px,#f3ecd6 4px,#f3ecd6 8px)}
+.colval{font-size:.72rem;color:var(--navy);font-weight:500;margin-bottom:3px}
+.collab{font-size:.76rem;margin-top:6px;color:var(--ink)}
+.colsub{font-size:.68rem;color:var(--mute)}
+/* horizontal rows */
+.hrow{display:grid;grid-template-columns:46px 1fr 70px;gap:10px;align-items:center;margin:5px 0;font-size:.82rem}
+.hrow.t5{grid-template-columns:22px minmax(0,1.1fr) minmax(0,1fr) 74px}
+.htrack{background:#f1ead6;border-radius:6px;height:16px;overflow:hidden;display:block}
+.hbar{display:block;height:100%;background:#9FB3C8;border-radius:6px}
+.hbar.hi{background:var(--navy)}
+.hbar.neg{background:var(--red)}
+.hrow:not(.t5) .hbar.hi{background:var(--gold)}
+.hval{text-align:right;font-variant-numeric:tabular-nums;color:var(--navy);font-weight:400}
+.hlab{color:var(--mute)}
+.rank{background:var(--gold);color:var(--navy);width:22px;height:22px;border-radius:50%;text-align:center;font-size:.75rem;line-height:22px;font-weight:500}
+.tname{font-size:.78rem;line-height:1.35}
+.legendkey{display:flex;gap:14px;font-size:.75rem;color:var(--mute);margin-top:8px;flex-wrap:wrap}
+.legendkey i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+/* stacked */
+.stack{display:flex;height:34px;border-radius:10px;overflow:hidden;margin:6px 0 14px;font-size:.8rem;color:#fff}
+.stack span{display:flex;align-items:center;justify-content:center;white-space:nowrap}
+.s-rep{background:var(--navy)}.s-once{background:var(--gold);color:var(--navy)}
+.stl{font-size:.82rem;color:var(--mute)}
+/* donut */
+.donutbox{display:flex;gap:22px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.donut{width:170px;height:170px;border-radius:50%;background:conic-gradient(#1F3A5F 0.00deg 283.86deg, #E9C46A 283.86deg 337.04deg, #4F7C9A 337.04deg 346.46deg, #C8745B 346.46deg 349.44deg, #9FB3C8 349.44deg 352.18deg, #CFC8B6 352.18deg 360.00deg);position:relative;flex:none}
+.donut::after{content:"";position:absolute;inset:34px;background:var(--card);border-radius:50%}
+.donutbox ul{list-style:none;flex:1;min-width:200px}
+.donutbox li{display:flex;align-items:center;gap:8px;font-size:.85rem;padding:3px 0}
+.donutbox li i{width:11px;height:11px;border-radius:3px;flex:none}
+.donutbox li span{flex:1}
+/* findings */
+.find{display:grid;gap:10px}
+.find .tag{font-size:.72rem;letter-spacing:.05em;color:var(--mute);font-weight:400}
+.find .tag.prop{color:#9a7a14}
+.find p{font-size:.92rem}
+.find hr{border:0;border-top:1px dashed var(--line)}
+/* steps */
+.steps{counter-reset:s;display:grid;gap:12px}
+.step{display:grid;grid-template-columns:38px 1fr;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.step::before{counter-increment:s;content:counter(s);background:var(--gold);color:var(--navy);width:34px;height:34px;border-radius:50%;text-align:center;line-height:34px;font-weight:500}
+.step h3{font-size:1rem;font-weight:500;color:var(--navy)}
+.step p,.step li{font-size:.9rem}
+table.flags{width:100%;border-collapse:collapse;margin-top:10px;font-size:.84rem}
+table.flags th,table.flags td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+table.flags th{color:var(--navy);font-weight:500;background:#f6efd9}
+table.flags td.r{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.pill{display:inline-block;padding:1px 10px;border-radius:999px;font-size:.75rem;font-weight:400}
+.p-n{background:#dfe7f1;color:var(--navy)}.p-c{background:#f6dcd2;color:#8a3f28}.p-p{background:#efe6c4;color:#7a6210}.p-s{background:#e7e4dc;color:#555}
+.cant{display:grid;gap:12px}
+.cant .card{border-left:5px solid var(--red)}
+.cant h3{color:#8a3f28}
+.cant p{font-size:.9rem}
+footer{margin-top:60px;background:var(--navy);color:#9fb0c8;padding:26px 0;font-size:.82rem;text-align:center;border-top:6px solid var(--gold)}
+@media(max-width:560px){.hero{padding:40px 0 36px}section{padding-top:40px}.card{padding:18px}.hrow.t5{grid-template-columns:22px 1fr 64px}.hrow.t5 .htrack{grid-column:2/4;grid-row:2}.donut{margin:0 auto}.cols{gap:5px}.colval{font-size:.62rem}.collab{font-size:.68rem}}
+</style>
+</head>
+<body>
+
+<header class="hero"><div class="wrap">
+  <div class="eyebrow">DATA ANALYST PORTFOLIO · ONLINE RETAIL EP.1</div>
+  <h1>วิเคราะห์ยอดขายร้านค้าออนไลน์<br>ขายดีอะไร ยกเลิกเพราะอะไร ลูกค้าเราคือใคร</h1>
+  <p>โปรเจกต์วิเคราะห์ข้อมูลธุรกรรม 55,032 แถว ช่วง 1 ธ.ค. 2010 – 9 ธ.ค. 2011 เพื่อตอบโจทย์ 4 ข้อจากหัวหน้า ทำความสะอาดด้วยวิธีติดธงโดยไม่ลบแถว และสรุปด้วย Pivot Table + XLOOKUP ใน Google Sheets</p>
+  <div class="btns">
+    <a class="btn" href="https://www.kaggle.com/datasets/natpaphonnukhunthod/online-retail-10-sample-for-da-portfolio" target="_blank" rel="noopener">Kaggle</a>
+    
+    
+  </div>
+</div></header>
+
+<main class="wrap">
+
+<section id="questions">
+  <h2><span class="sec-no">1</span>โจทย์ 4 ข้อ และคำตอบสั้น ๆ</h2>
+  <p class="lead">&ldquo;ขายดี&rdquo; ในโปรเจกต์นี้หมายถึงยอดเงิน (Quantity × UnitPrice) ไม่ใช่จำนวนชิ้น</p>
+  <div class="grid g2">
+    <div class="card q"><div class="qn">โจทย์ที่ 1</div><h3>ขายดีวันไหน ช่วงเวลาไหน</h3>
+      <p class="ans">วันพฤหัสบดีขายดีสุด <em>190,546</em> คิดเป็น 22.3% ของยอดทั้งหมด และช่วง 10:00–15:59 ทำยอดรวม 78.5%</p></div>
+    <div class="card q"><div class="qn">โจทย์ที่ 2</div><h3>สินค้าอะไรขายดี</h3>
+      <p class="ans">ชั้นวางเค้ก 3 ชั้น (Regency Cakestand 3 Tier) ทำเงินสูงสุด <em>19,233</em> รองลงมาคือ Party Bunting 11,201</p></div>
+    <div class="card q"><div class="qn">โจทย์ที่ 3</div><h3>อะไรโดนยกเลิกบ่อย เพราะอะไร</h3>
+      <p class="ans">ชั้นวางเค้ก 3 ชั้นโดนยกเลิก <em>39 รายการ</em> มากสุดในบรรดาสินค้า ส่วนสาเหตุตอบจากข้อมูลไม่ได้ เพราะไฟล์ไม่มีคอลัมน์เหตุผล</p></div>
+    <div class="card q"><div class="qn">โจทย์ที่ 4</div><h3>ลูกค้าเราเป็นใคร</h3>
+      <p class="ans">ลูกค้าที่ระบุตัวตนได้ 378 ราย ซื้อซ้ำ 64% ของลูกค้า ทำยอด 94% ส่วนใหญ่อยู่สหราชอาณาจักร (79%) และไอร์แลนด์ (15%)</p></div>
+  </div>
+</section>
+
+<section id="dashboard">
+  <h2><span class="sec-no">2</span>Dashboard</h2>
+  <p class="lead">คำนวณจากแถวสถานะ &ldquo;ปกติ&rdquo; + &ldquo;ยกเลิก&rdquo; ยอดยกเลิกติดลบจึงหักกับยอดขายเอง (หน่วยเงินตามไฟล์ ไม่ระบุสกุล)</p>
+
+  <div class="grid g4">
+    <div class="kpi"><div class="n">854,077</div><div class="l">ยอดขายสุทธิ</div><div class="s">ปกติ 1,078,195 หักยกเลิก 224,118</div></div>
+    <div class="kpi"><div class="n">1,835</div><div class="l">จำนวนบิลขาย</div><div class="s">บิลยกเลิกอีก 385 บิล</div></div>
+    <div class="kpi"><div class="n">378</div><div class="l">ลูกค้าที่ระบุตัวตนได้</div><div class="s">มี 87% ของยอดสุทธิ ที่เหลือไม่มี CustomerID</div></div>
+    <div class="kpi"><div class="n">17.3%</div><div class="l">สัดส่วนบิลที่เป็นบิลยกเลิก</div><div class="s">ยกเลิก 385 จาก 2,220 บิล</div></div>
+  </div>
+  <p class="note">ยอดยกเลิก 224,118 รวมบิลเดียวที่สั่ง 80,995 ชิ้น มูลค่า 168,470 แล้วยกเลิกภายใน 12 นาที (9 ธ.ค. 2011) ถ้าตัดบิลนี้ออก ยอดยกเลิกจะเหลือ 55,648 ตัวเลขสุทธิไม่ได้รับผลกระทบเพราะบวกลบกันพอดี</p>
+
+  <div class="grid g2" style="margin-top:16px">
+    <div class="card"><h3>ยอดขายตามวันในสัปดาห์</h3>
+      <div class="stl">เปอร์เซ็นต์คือสัดส่วนของยอดสุทธิทั้งหมด</div>
+      <div class="cols"><div class="col"><div class="colval">113.1k</div><div class="colbar" style="height:59.4%"></div><div class="collab">จันทร์</div><div class="colsub">13.2%</div></div><div class="col"><div class="colval">153.7k</div><div class="colbar" style="height:80.6%"></div><div class="collab">อังคาร</div><div class="colsub">18.0%</div></div><div class="col"><div class="colval">166.5k</div><div class="colbar" style="height:87.4%"></div><div class="collab">พุธ</div><div class="colsub">19.5%</div></div><div class="col"><div class="colval">190.5k</div><div class="colbar hi" style="height:100.0%"></div><div class="collab">พฤหัสฯ</div><div class="colsub">22.3%</div></div><div class="col"><div class="colval">138.6k</div><div class="colbar" style="height:72.7%"></div><div class="collab">ศุกร์</div><div class="colsub">16.2%</div></div><div class="col"><div class="colval">–</div><div class="colbar none" style="height:6%"></div><div class="collab">เสาร์</div><div class="colsub">ไม่มีบิล</div></div><div class="col"><div class="colval">91.5k</div><div class="colbar" style="height:48.0%"></div><div class="collab">อาทิตย์</div><div class="colsub">10.7%</div></div></div>
+      <p class="note">ไม่มีบิลของวันเสาร์เลยในไฟล์นี้</p></div>
+    <div class="card"><h3>ยอดขายตามชั่วโมง</h3>
+      <div class="stl">แถบสีทองคือช่วง 10:00–15:59 ซึ่งรวมกันได้ 78.5%</div>
+      <div class="hrow"><span class="hlab">06:00</span><span class="htrack"><span class="hbar" style="width:0.0%"></span></span><span class="hval">-130</span></div><div class="hrow"><span class="hlab">07:00</span><span class="htrack"><span class="hbar" style="width:0.3%"></span></span><span class="hval">489</span></div><div class="hrow"><span class="hlab">08:00</span><span class="htrack"><span class="hbar" style="width:13.3%"></span></span><span class="hval">19,216</span></div><div class="hrow"><span class="hlab">09:00</span><span class="htrack"><span class="hbar" style="width:47.2%"></span></span><span class="hval">68,213</span></div><div class="hrow"><span class="hlab">10:00</span><span class="htrack"><span class="hbar hi" style="width:73.4%"></span></span><span class="hval">106,103</span></div><div class="hrow"><span class="hlab">11:00</span><span class="htrack"><span class="hbar hi" style="width:53.1%"></span></span><span class="hval">76,755</span></div><div class="hrow"><span class="hlab">12:00</span><span class="htrack"><span class="hbar hi" style="width:83.4%"></span></span><span class="hval">120,613</span></div><div class="hrow"><span class="hlab">13:00</span><span class="htrack"><span class="hbar hi" style="width:89.7%"></span></span><span class="hval">129,682</span></div><div class="hrow"><span class="hlab">14:00</span><span class="htrack"><span class="hbar hi" style="width:64.3%"></span></span><span class="hval">93,018</span></div><div class="hrow"><span class="hlab">15:00</span><span class="htrack"><span class="hbar hi" style="width:100.0%"></span></span><span class="hval">144,643</span></div><div class="hrow"><span class="hlab">16:00</span><span class="htrack"><span class="hbar" style="width:40.2%"></span></span><span class="hval">58,108</span></div><div class="hrow"><span class="hlab">17:00</span><span class="htrack"><span class="hbar" style="width:21.5%"></span></span><span class="hval">31,033</span></div><div class="hrow"><span class="hlab">18:00</span><span class="htrack"><span class="hbar" style="width:2.2%"></span></span><span class="hval">3,162</span></div><div class="hrow"><span class="hlab">19:00</span><span class="htrack"><span class="hbar" style="width:2.2%"></span></span><span class="hval">3,173</span></div></div>
+    <div class="card"><h3>Top 5 สินค้าทำเงินสูงสุด</h3>
+      <div class="stl">ยอดสุทธิต่อสินค้า (ไม่นับรหัสที่ไม่ใช่สินค้า)</div>
+      <div class="hrow t5"><span class="rank">1</span><span class="tname">Regency Cakestand 3 Tier</span><span class="htrack"><span class="hbar hi" style="width:100.0%"></span></span><span class="hval">19,233</span></div><div class="hrow t5"><span class="rank">2</span><span class="tname">Party Bunting</span><span class="htrack"><span class="hbar hi" style="width:58.2%"></span></span><span class="hval">11,201</span></div><div class="hrow t5"><span class="rank">3</span><span class="tname">Jumbo Bag Red Retrospot</span><span class="htrack"><span class="hbar hi" style="width:41.2%"></span></span><span class="hval">7,930</span></div><div class="hrow t5"><span class="rank">4</span><span class="tname">Picnic Basket Wicker Large</span><span class="htrack"><span class="hbar hi" style="width:37.6%"></span></span><span class="hval">7,230</span></div><div class="hrow t5"><span class="rank">5</span><span class="tname">Cream Sweetheart Mini Chest</span><span class="htrack"><span class="hbar hi" style="width:36.2%"></span></span><span class="hval">6,968</span></div></div>
+    <div class="card"><h3>Top 5 สินค้าที่โดนยกเลิกบ่อยสุด</h3>
+      <div class="stl">นับจำนวนรายการยกเลิก (ไม่นับรหัสที่ไม่ใช่สินค้า)</div>
+      <div class="hrow t5"><span class="rank">1</span><span class="tname">Regency Cakestand 3 Tier</span><span class="htrack"><span class="hbar neg" style="width:100.0%"></span></span><span class="hval">39 รายการ</span></div><div class="hrow t5"><span class="rank">2</span><span class="tname">Set Of 3 Cake Tins Pantry Design</span><span class="htrack"><span class="hbar neg" style="width:33.3%"></span></span><span class="hval">13 รายการ</span></div><div class="hrow t5"><span class="rank">3</span><span class="tname">Strawberry Ceramic Trinket Box</span><span class="htrack"><span class="hbar neg" style="width:28.2%"></span></span><span class="hval">11 รายการ</span></div><div class="hrow t5"><span class="rank">4</span><span class="tname">Lunch Bag Red Retrospot</span><span class="htrack"><span class="hbar neg" style="width:28.2%"></span></span><span class="hval">11 รายการ</span></div><div class="hrow t5"><span class="rank">5</span><span class="tname">Set Of 3 Regency Cake Tins</span><span class="htrack"><span class="hbar neg" style="width:25.6%"></span></span><span class="hval">10 รายการ</span></div>
+      <p class="note">ชั้นวางเค้ก 3 ชั้นถูกยกเลิก 39 จาก 267 รายการ (14.6%)</p></div>
+    <div class="card"><h3>ลูกค้าซื้อซ้ำ vs ซื้อครั้งเดียว</h3>
+      <div class="stl">จำนวนลูกค้า (376 ราย ที่มีบิลขายอย่างน้อย 1 บิล)</div>
+      <div class="stack"><span class="s-rep" style="width:63.8%">ซื้อซ้ำ 240 ราย</span><span class="s-once" style="width:36.2%">ครั้งเดียว 136</span></div>
+      <div class="stl">สัดส่วนยอดขายของลูกค้าที่ระบุตัวตน</div>
+      <div class="stack"><span class="s-rep" style="width:93.9%">ซื้อซ้ำ 93.9%</span><span class="s-once" style="width:6.1%">6%</span></div>
+      <p class="note">ซื้อซ้ำ = มีบิลขายตั้งแต่ 2 บิลขึ้นไป ลูกค้าอีก 2 รายมีแต่บิลยกเลิก จึงไม่นับในกราฟนี้</p></div>
+    <div class="card"><h3>สัดส่วนยอดขายตามประเทศ</h3>
+      <div class="donutbox"><div class="donut" role="img" aria-label="สัดส่วนยอดขายตามประเทศ"></div><ul><li><i style="background:#1F3A5F"></i><span>สหราชอาณาจักร</span><b>78.8%</b></li><li><i style="background:#E9C46A"></i><span>ไอร์แลนด์ (EIRE)</span><b>14.8%</b></li><li><i style="background:#4F7C9A"></i><span>เยอรมนี</span><b>2.6%</b></li><li><i style="background:#C8745B"></i><span>ฝรั่งเศส</span><b>0.8%</b></li><li><i style="background:#9FB3C8"></i><span>ฟินแลนด์</span><b>0.8%</b></li><li><i style="background:#CFC8B6"></i><span>อื่น ๆ (12 ประเทศ)</span><b>2.2%</b></li></ul></div></div>
+  </div>
+</section>
+
+<section id="findings">
+  <h2><span class="sec-no">3</span>ข้อค้นพบ + ข้อเสนอ</h2>
+  <p class="lead">แต่ละข้อมาจากตัวเลขใน Dashboard ด้านบน</p>
+  <div class="grid g2">
+    <div class="card find"><h3>1. ชั้นวางเค้ก 3 ชั้น ทำเงินมากสุด แต่ก็โดนยกเลิกบ่อยสุด</h3>
+      <div><div class="tag">ข้อค้นพบ</div><p>ทำยอดสุทธิ 19,233 (อันดับ 1) และมีรายการยกเลิก 39 จาก 267 รายการ (14.6%) มากสุดในบรรดาสินค้าทั้งหมด</p></div><hr>
+      <div><div class="tag prop">ข้อเสนอ</div><p>ถามทีมขายและทีมจัดส่งว่าที่ยกเลิกเกิดจากอะไร เช่น ของเสียหายระหว่างส่ง หรือลูกค้าสั่งผิด เพราะสินค้าตัวนี้คือตัวทำเงินหลัก</p></div></div>
+    <div class="card find"><h3>2. ลูกค้ารายเดียวทำยอดถึง 17%</h3>
+      <div><div class="tag">ข้อค้นพบ</div><p>ลูกค้ารหัส 14911 ทำยอด 125,023 คิดเป็น 16.8% ของยอดลูกค้าที่ระบุตัวตนได้ (14.6% ของยอดสุทธิทั้งหมด) และ 3 อันดับแรกรวมกัน 28%</p></div><hr>
+      <div><div class="tag prop">ข้อเสนอ</div><p>ลดการพึ่งพาลูกค้าไม่กี่ราย โดยเพิ่มโปรโมชันให้ลูกค้าซื้อซ้ำรายกลาง ๆ และหาลูกค้าใหม่มาเติม</p></div></div>
+    <div class="card find"><h3>3. ขายดีวันพฤหัสบดี ช่วง 10:00–15:59</h3>
+      <div><div class="tag">ข้อค้นพบ</div><p>วันพฤหัสฯ ทำ 22.3% ของยอดทั้งหมด และช่วง 10:00–15:59 ทำ 78.5% ของยอดทั้งวัน</p></div><hr>
+      <div><div class="tag prop">ข้อเสนอ</div><p>จัดโปรโมชันและเตรียมสต็อกกับทีมแพ็กของให้ตรงช่วงนี้ เพื่อรองรับคำสั่งซื้อที่หนาแน่นที่สุด</p></div></div>
+    <div class="card find"><h3>4. เยอรมนียกเลิกบ่อยกว่าอังกฤษหลายเท่า</h3>
+      <div><div class="tag">ข้อค้นพบ</div><p>เยอรมนีมีรายการยกเลิก 9.6% ของรายการทั้งหมด เทียบกับอังกฤษ 1.6% (ราว 6 เท่า) ถ้านับเป็นรายบิล 34% เทียบกับ 17% (ราว 2 เท่า) เยอรมนีมีเพียง 64 บิล จึงควรอ่านด้วยความระวัง</p></div><hr>
+      <div><div class="tag prop">ข้อเสนอ</div><p>เช็กเรื่องขนส่งไปเยอรมนี เช่น เวลาส่งหรือสภาพสินค้าตอนถึง ก่อนสรุปว่าเป็นปัญหาของตลาดนี้</p></div></div>
+  </div>
+</section>
+
+<section id="method">
+  <h2><span class="sec-no">4</span>วิธีทำ</h2>
+  <p class="lead">ใช้ Google Sheets ทั้งหมด ไม่ลบแถวข้อมูลดิบ</p>
+  <div class="steps">
+    <div class="step"><div><h3>แตกโจทย์ด้วย AI และนิยามคำว่า &ldquo;ขายดี&rdquo;</h3><p>แตกโจทย์จากหัวหน้าเป็นคำถามย่อยที่ตอบด้วยข้อมูลได้ และกำหนดให้ &ldquo;ขายดี&rdquo; = ยอดเงิน (Quantity × UnitPrice) เพื่อไม่ให้สินค้าราคาถูกที่ขายเป็นจำนวนมากบิดผลลัพธ์</p></div></div>
+    <div class="step"><div><h3>Clean แบบติดธง ไม่ลบแถว</h3><p>เพิ่มคอลัมน์สถานะให้ทุกแถว โดยตรวจตามลำดับด้านล่าง แถวแรกที่เข้าเงื่อนไขได้ธงนั้น</p>
+      <table class="flags"><tr><th>ธง</th><th>เงื่อนไข</th><th style="text-align:right">แถว</th></tr>
+      <tr><td><span class="pill p-c">ยกเลิก</span></td><td>InvoiceNo ขึ้นต้นด้วย C</td><td class="r">1,073</td></tr>
+      <tr><td><span class="pill p-p">ไม่ใช่สินค้า</span></td><td>StockCode เป็น POST, DOT, C2, M, BANK CHARGES, AMAZONFEE, S, D, B หรือ gift_...</td><td class="r">265</td></tr>
+      <tr><td><span class="pill p-s">ไม่ใช่การขาย</span></td><td>UnitPrice = 0</td><td class="r">255</td></tr>
+      <tr><td><span class="pill p-n">ปกติ</span></td><td>นอกเหนือจากข้างบน</td><td class="r">53,439</td></tr></table>
+      <p class="note">แถวยกเลิกที่เป็นรหัสไม่ใช่สินค้า (36 แถว มูลค่า -34,483) ถูกนับเป็น &ldquo;ยกเลิก&rdquo; ตามลำดับธง จึงรวมอยู่ในยอดสุทธิ แต่ถูกตัดออกจากอันดับสินค้า</p></div></div>
+    <div class="step"><div><h3>คิดยอดขายจากแถว &ldquo;ปกติ&rdquo; + &ldquo;ยกเลิก&rdquo;</h3><p>แถวยกเลิกมี Quantity ติดลบ ยอดเงินจึงติดลบและหักกับยอดขายเองโดยไม่ต้องเขียนสูตรแยก แถวธง &ldquo;ไม่ใช่สินค้า&rdquo; และ &ldquo;ไม่ใช่การขาย&rdquo; ไม่ถูกนำมาคิด</p></div></div>
+    <div class="step"><div><h3>สรุปด้วย Pivot Table + XLOOKUP</h3><p>ใช้ Pivot Table สรุปยอดตามวัน ชั่วโมง สินค้า ลูกค้า และประเทศ แล้วใช้ XLOOKUP ดึงชื่อสินค้าและข้อมูลประกอบมาเทียบกัน ตัวเลขในหน้านี้ตรวจซ้ำกับการคำนวณจากไฟล์ CSV อีกรอบหนึ่ง</p></div></div>
+  </div>
+</section>
+
+<section id="limits">
+  <h2><span class="sec-no">5</span>สิ่งที่ข้อมูลตอบไม่ได้</h2>
+  <p class="lead">ข้อจำกัดที่ต้องบอกก่อนนำตัวเลขไปตัดสินใจ</p>
+  <div class="cant">
+    <div class="card"><h3>ไม่มีบิลวันเสาร์</h3><p>ไฟล์ไม่มีบิลของวันเสาร์เลย แยกไม่ได้ว่าร้านปิดทำการ หรือข้อมูลส่วนนั้นหายไป จึงสรุปเรื่องวันเสาร์ไม่ได้</p></div>
+    <div class="card"><h3>แถวซ้ำทุกช่อง</h3><p>มี 496 แถวที่ซ้ำกันทุกคอลัมน์ (มูลค่าราว 2,115 หรือ 0.25% ของยอดสุทธิ) ยังเก็บไว้ทั้งหมด เพราะแยกไม่ได้ว่าลูกค้าสั่งซ้ำจริงหรือระบบบันทึกซ้ำ</p></div>
+    <div class="card"><h3>ไม่มีคอลัมน์สาเหตุการยกเลิก</h3><p>รู้ว่าอะไรถูกยกเลิกและมากแค่ไหน แต่ไม่รู้ว่าเพราะอะไร ต้องถามทีมที่หน้างาน</p></div>
+    <div class="card"><h3>ข้อควรระวังเพิ่มเติม</h3><p>มี 13,108 แถวที่ไม่มี CustomerID (24% ของแถว) ผลวิเคราะห์ลูกค้าจึงครอบคลุมราว 87% ของยอดสุทธิ นอกจากนี้ไฟล์ไม่ระบุสกุลเงิน ตัวเลขทั้งหมดจึงแสดงเป็นหน่วยตามไฟล์</p></div>
+  </div>
+</section>
+
+</main>
+
+<footer><div class="wrap">Data Analyst Portfolio · วิเคราะห์ยอดขายร้านค้าออนไลน์ · ข้อมูล: Online Retail (55,032 แถว)</div></footer>
+</body>
+</html>
